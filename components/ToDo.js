@@ -4,6 +4,8 @@ import { StyleSheet, View, Text } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
 import data from '../shared/data';
 
+
+///Helper Foos///
 function dateString(date, pattern = '') {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -18,7 +20,10 @@ function dateString(date, pattern = '') {
     pattern = pattern.replace('DT', date.getUTCDate());
     return pattern;
 }
-
+function getDayItems(items, rawDate) {
+    let filterStr = dateString(rawDate, 'MO DT YEAR');
+    return items.filter(item => (!item.date || item.date.indexOf(filterStr) > -1));
+}
 
 class ToDoItem extends Component {
     constructor(props) {
@@ -87,7 +92,8 @@ export class Today extends Component {
     }
     static navigationOptions = { title: "Today" }
     render(props) {
-        return (<ToDoPageContent items={data} subTitle={dateString(new Date(), 'MONTH DT, YEAR')} />);
+        let today = new Date();
+        return (<ToDoPageContent items={getDayItems(data, today)} subTitle={dateString(today, 'MONTH DT, YEAR')} />);
     }
 }
 
@@ -99,7 +105,7 @@ export class Tomorrow extends Component {
     render(props) {
         let tommorow = new Date();
         tommorow.setDate(tommorow.getDate() + 1);
-        return (<ToDoPageContent items={data} subTitle={dateString(tommorow, 'MONTH DT, YEAR')} />);
+        return (<ToDoPageContent items={getDayItems(data, tommorow)} subTitle={dateString(tommorow, 'MONTH DT, YEAR')} />);
     }
 }
 
