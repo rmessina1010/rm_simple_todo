@@ -20,9 +20,14 @@ function dateString(date, pattern = '') {
     pattern = pattern.replace('DT', date.getUTCDate());
     return pattern;
 }
+
 function getDayItems(items, rawDate) {
     let filterStr = dateString(rawDate, 'MO DT YEAR');
     return items.filter(item => (!item.date || item.date.indexOf(filterStr) > -1));
+}
+
+function getOverdue(items, rawDate) {
+    return items.filter(item => (!item.date || new Date(item.date) <= rawDate));
 }
 
 class ToDoItem extends Component {
@@ -76,7 +81,7 @@ export function ToDoPageContent(props) {
     );
 }
 
-class ToDoListPage extends Component {
+class OnCalendar extends Component {
     constructor(props) {
         super(props);
     }
@@ -106,6 +111,16 @@ export class Tomorrow extends Component {
         let tommorow = new Date();
         tommorow.setDate(tommorow.getDate() + 1);
         return (<ToDoPageContent items={getDayItems(data, tommorow)} subTitle={dateString(tommorow, 'MONTH DT, YEAR')} />);
+    }
+}
+export class Overdue extends Component {
+    constructor(props) {
+        super(props);
+    }
+    static navigationOptions = { title: "Overdue" }
+    render(props) {
+        let now = new Date();
+        return (<ToDoPageContent items={getOverdue(data, now)} subTitle={dateString(now, 'Late as of: MONTH DT, YEAR')} />);
     }
 }
 

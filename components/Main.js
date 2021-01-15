@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { Today, Tomorrow } from './ToDo'
+import { Today, Tomorrow, Overdue } from './ToDo'
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
@@ -48,6 +48,27 @@ const TomorrowNavigator = createStackNavigator(
     }
 );
 
+const OverdueNavigator = createStackNavigator(
+    {
+        Overdue: { screen: Overdue },
+    },
+    {
+        defaultNavigationOptions: ({ navigation }) => ({
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: style.headerTitle,
+            headerLeft: <Icon
+                name='exclamation-triangle'
+                type='font-awesome'
+                iconStyle={{ color: '#fff', marginLeft: 20 }}
+                onPress={() => navigation.toggleDrawer()}
+            />
+        })
+    }
+);
+
 const MainNavigator = createDrawerNavigator(
     {
         Today: {
@@ -56,6 +77,19 @@ const MainNavigator = createDrawerNavigator(
                 drawerIcon: ({ tintColor }) => (
                     <Icon
                         name='clock-o'
+                        type='font-awesome'
+                        size={24}
+                        color={tintColor}
+                    />
+                )
+            }
+        },
+        Overdue: {
+            screen: OverdueNavigator,
+            navigationOptions: {
+                drawerIcon: ({ tintColor }) => (
+                    <Icon
+                        name='exclamation-triangle'
                         type='font-awesome'
                         size={24}
                         color={tintColor}
@@ -75,7 +109,7 @@ const MainNavigator = createDrawerNavigator(
                     />
                 )
             }
-        }
+        },
     }
 );
 
