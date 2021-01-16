@@ -72,7 +72,7 @@ const OverdueNavigator = createStackNavigator(
 
 const CalendarNavigator = createStackNavigator(
     {
-        Overdue: { screen: OnCalendar },
+        calendar: { screen: OnCalendar },
     },
     {
         defaultNavigationOptions: ({ navigation }) => ({
