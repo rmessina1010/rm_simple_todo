@@ -6,7 +6,8 @@ import data from '../shared/data';
 
 
 ///Helper Foos///
-function dateString(date, pattern = '') {
+export function dateString(date, pattern = '') {
+    if (!date || !date.getUTCFullYear) { return ''; }
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const monthAbv = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
@@ -21,9 +22,10 @@ function dateString(date, pattern = '') {
     return pattern;
 }
 
-function getDayItems(items, rawDate) {
+export function getDayItems(items, rawDate) {
     let filterStr = dateString(rawDate, 'MO DT YEAR');
-    return items.filter(item => (!item.date || item.date.indexOf(filterStr) > -1));
+
+    return filterStr ? items.filter(item => (!item.date || item.date.indexOf(filterStr) > -1)) : [];
 }
 
 function getOverdue(items, rawDate) {
@@ -71,24 +73,16 @@ export function ToDoItemList(props) {
 }
 
 export function ToDoPageContent(props) {
+    let auxAft = props.auxAft ? props.auxAft : null;
     return (
         <ScrollView>
             <View padding={10} backgroundColor="#777" >
                 <Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>{props.subTitle}</Text>
             </View>
             <ToDoItemList items={props.items} />
+            {auxAft}
         </ScrollView>
     );
-}
-
-class OnCalendar extends Component {
-    constructor(props) {
-        super(props);
-    }
-    static navigationOptions = { title: "Calendar" }
-    render(props) {
-        return (<ToDoPageContent items={data} subTitle="cal" />);
-    }
 }
 
 export class Today extends Component {

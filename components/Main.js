@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Today, Tomorrow, Overdue } from './ToDo'
+import { OnCalendar } from './CalendarSelect'
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
@@ -69,6 +70,28 @@ const OverdueNavigator = createStackNavigator(
     }
 );
 
+const CalendarNavigator = createStackNavigator(
+    {
+        Overdue: { screen: OnCalendar },
+    },
+    {
+        defaultNavigationOptions: ({ navigation }) => ({
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: style.headerTitle,
+            headerLeft: <Icon
+                name='calendar'
+                type='font-awesome'
+                iconStyle={{ color: '#fff', marginLeft: 20 }}
+                onPress={() => navigation.toggleDrawer()}
+            />
+        })
+    }
+);
+
+
 const MainNavigator = createDrawerNavigator(
     {
         Today: {
@@ -77,6 +100,19 @@ const MainNavigator = createDrawerNavigator(
                 drawerIcon: ({ tintColor }) => (
                     <Icon
                         name='clock-o'
+                        type='font-awesome'
+                        size={24}
+                        color={tintColor}
+                    />
+                )
+            }
+        },
+        Tomorrow: {
+            screen: TomorrowNavigator,
+            navigationOptions: {
+                drawerIcon: ({ tintColor }) => (
+                    <Icon
+                        name='calendar-plus-o'
                         type='font-awesome'
                         size={24}
                         color={tintColor}
@@ -97,12 +133,12 @@ const MainNavigator = createDrawerNavigator(
                 )
             }
         },
-        Tomorrow: {
-            screen: TomorrowNavigator,
+        Calendar: {
+            screen: CalendarNavigator,
             navigationOptions: {
                 drawerIcon: ({ tintColor }) => (
                     <Icon
-                        name='calendar-plus-o'
+                        name='calendar'
                         type='font-awesome'
                         size={24}
                         color={tintColor}
