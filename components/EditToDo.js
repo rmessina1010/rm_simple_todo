@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-export function displayTime(time) {
-    let hours = time.getHours();
-    let minutes = time.getMinutes();
-    let ampm = (hours > 11) ? ' PM' : ' AM';
-    if (hours == 0) { hours = 12; }
-    if (hours > 12) { hours -= 12; }
-    return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ampm;
-}
+import { styles, displayTime } from './NewToDo';
 
 function resetNewToDoState() {
     return {
@@ -23,21 +15,21 @@ function resetNewToDoState() {
         showClock: false,
     }
 }
-class NewToDo extends Component {
+
+class EditToDo extends Component {
     constructor(props) {
         super(props);
 
-        this.state = resetNewToDoState();
+        this.state = {
+            ...resetNewToDoState()
+        };
         this.clockTarget = 'endTime';
-
     }
 
     handeSubmit() {
-        this.setState(resetNewToDoState());
         alert(1);
-
     }
-    static navigationOptions = { title: "Create To Do" }
+    static navigationOptions = { title: "Edit To Do" }
 
     render() {
 
@@ -125,9 +117,17 @@ class NewToDo extends Component {
                             style={{ ...styles.button, backgroundColor: '#5637DD' }}
                             onPress={() => this.handeSubmit(false)}
                         >
-                            <Text style={styles.buttonText}>Create</Text>
+                            <Text style={styles.buttonText}>Update</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            activeOpacity={.6}
+                            style={styles.button}
+                            onPress={() => this.handeSubmit(true)}
+                        >
+                            <Text style={styles.buttonText}>Delete</Text>
                         </TouchableOpacity>
                     </View>
+
                 </View>
                 { this.state.showCalendar ?
                     (<DateTimePicker
@@ -158,45 +158,4 @@ class NewToDo extends Component {
 }
 
 
-
-
-export const styles = StyleSheet.create({
-    formRow: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-        flexDirection: 'row',
-        margin: 20
-    },
-    formLabel: {
-        fontSize: 18,
-        flex: 2
-    },
-    formItem: {
-        flex: 1
-    },
-    button: {
-        alignItems: "center",
-        backgroundColor: "#DDDDDD",
-        padding: 10,
-        margin: 10,
-        borderRadius: 5,
-        flex: 1,
-        backgroundColor: '#808080'
-
-    },
-    buttonText: {
-        alignItems: "center",
-        color: '#fff'
-    },
-    textInput: {
-        borderColor: '#ccc',
-        borderWidth: 1,
-        backgroundColor: '#eee',
-        borderRadius: 5,
-        fontWeight: 'bold'
-
-    }
-});
-
-export default NewToDo;
+export default EditToDo;

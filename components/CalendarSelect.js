@@ -28,7 +28,7 @@ export class OnCalendar extends Component {
             <View style={{ alignItems: "center", paddingVertical: 0 }}>
                 <TouchableOpacity
                     activeOpacity={.6}
-                    style={styles.button}
+                    style={{ ...styles.button, borderWidth: 1, borderColor: '#ccc' }}
                     onPress={this.toggleCal}
                 >
                     <Text style={styles.buttonText}>{'Date: ' + this.state.date.toLocaleDateString()}</Text>
@@ -48,7 +48,7 @@ export class OnCalendar extends Component {
             </View>
         );
 
-        return (<ToDoPageContent items={getDayItems(data, this.state.date)} subTitle={null} auxBef={CalendarSection} />);
+        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data, this.state.date)} subTitle={null} auxBef={CalendarSection} />);
     }
 }
 

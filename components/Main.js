@@ -3,15 +3,28 @@ import { View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Today, Tomorrow, Overdue } from './ToDo'
 import NewToDo from './NewToDo'
+import EditToDo from './EditToDo'
 import { OnCalendar } from './CalendarSelect'
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 
 
+
 const TodayNavigator = createStackNavigator(
     {
         Today: { screen: Today },
+        EditToDo: {
+            screen: EditToDo,
+            navigationOptions: ({ navigation }) => ({
+                headerLeft: <Icon
+                    name='pencil'
+                    type='font-awesome'
+                    iconStyle={{ color: '#fff', marginLeft: 20 }}
+                    onPress={() => navigation.pop()}//return to prev
+                />
+            })
+        },
     },
     {
         defaultNavigationOptions: ({ navigation }) => ({
@@ -29,9 +42,22 @@ const TodayNavigator = createStackNavigator(
         })
     }
 );
+
 const TomorrowNavigator = createStackNavigator(
     {
         Tommorrow: { screen: Tomorrow },
+        EditToDo: {
+            screen: EditToDo,
+            navigationOptions: ({ navigation }) => ({
+                headerLeft: <Icon
+                    name='pencil'
+                    type='font-awesome'
+                    iconStyle={{ color: '#fff', marginLeft: 20 }}
+                    onPress={() => navigation.pop()}//return to prev
+                />
+            })
+        },
+
     },
     {
         defaultNavigationOptions: ({ navigation }) => ({
@@ -53,6 +79,17 @@ const TomorrowNavigator = createStackNavigator(
 const OverdueNavigator = createStackNavigator(
     {
         Overdue: { screen: Overdue },
+        EditToDo: {
+            screen: EditToDo,
+            navigationOptions: ({ navigation }) => ({
+                headerLeft: <Icon
+                    name='pencil'
+                    type='font-awesome'
+                    iconStyle={{ color: '#fff', marginLeft: 20 }}
+                    onPress={() => navigation.pop()}//return to prev
+                />
+            })
+        },
     },
     {
         defaultNavigationOptions: ({ navigation }) => ({
@@ -74,6 +111,17 @@ const OverdueNavigator = createStackNavigator(
 const CalendarNavigator = createStackNavigator(
     {
         calendar: { screen: OnCalendar },
+        EditToDo: {
+            screen: EditToDo,
+            navigationOptions: ({ navigation }) => ({
+                headerLeft: <Icon
+                    name='pencil'
+                    type='font-awesome'
+                    iconStyle={{ color: '#fff', marginLeft: 20 }}
+                    onPress={() => navigation.pop()}//return to prev
+                />
+            })
+        },
     },
     {
         defaultNavigationOptions: ({ navigation }) => ({
