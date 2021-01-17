@@ -3,22 +3,22 @@ import { ScrollView } from 'react-native';
 import { StyleSheet, View, Text } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
 import data from '../shared/data';
-
+import { displayTime } from './NewToDo';
 
 ///Helper Foos///
 export function dateString(date, pattern = '') {
-    if (!date || !date.getUTCFullYear) { return ''; }
+    if (!date || !date.getFullYear) { return ''; }
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const monthAbv = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     const dayAbv = ['Sun', 'Mon', 'Tue', 'Wed', 'Thrs', 'Fri', 'Sat'];
-    pattern = pattern.replace('YR', date.getUTCFullYear().toString().substr(-2));
-    pattern = pattern.replace('YEAR', date.getUTCFullYear().toString());
-    pattern = pattern.replace('MONTH', monthNames[date.getUTCMonth()]);
-    pattern = pattern.replace('MO', monthAbv[date.getUTCMonth()]);
-    pattern = pattern.replace('DAY', dayNames[date.getUTCDay()]);
-    pattern = pattern.replace('DY', dayAbv[date.getUTCDay()]);
-    pattern = pattern.replace('DT', date.getUTCDate());
+    pattern = pattern.replace('YR', date.getFullYear().toString().substr(-2));
+    pattern = pattern.replace('YEAR', date.getFullYear().toString());
+    pattern = pattern.replace('MONTH', monthNames[date.getMonth()]);
+    pattern = pattern.replace('MO', monthAbv[date.getMonth()]);
+    pattern = pattern.replace('DAY', dayNames[date.getDay()]);
+    pattern = pattern.replace('DY', dayAbv[date.getDay()]);
+    pattern = pattern.replace('DT', date.getDate());
     return pattern;
 }
 
@@ -73,14 +73,13 @@ export function ToDoItemList(props) {
 }
 
 export function ToDoPageContent(props) {
-    let auxAft = props.auxAft ? props.auxAft : null;
     return (
         <ScrollView>
             <View padding={10} backgroundColor="#777" >
-                <Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>{props.subTitle}</Text>
+                {props.subTitle ? (<Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>{props.subTitle}</Text>) : null}
+                {props.auxBef}
             </View>
             <ToDoItemList items={props.items} />
-            {auxAft}
         </ScrollView>
     );
 }

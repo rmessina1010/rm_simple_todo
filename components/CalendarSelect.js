@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { ToDoPageContent, getDayItems, dateString } from './ToDo';
 import data from '../shared/data';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -25,14 +25,15 @@ export class OnCalendar extends Component {
     render(props) {
 
         const CalendarSection = (
-            <View style={{ alignItems: "center", paddingVertical: 20 }}>
-                <Button
+            <View style={{ alignItems: "center", paddingVertical: 0 }}>
+                <TouchableOpacity
+                    activeOpacity={.6}
+                    style={styles.button}
                     onPress={this.toggleCal}
-                    title=' Select Date '
-                    color='#5637DD'
-                    accessibilityLabel='Tap me to select a reservation date'
+                >
+                    <Text style={styles.buttonText}>{'Date: ' + this.state.date.toLocaleDateString()}</Text>
+                </TouchableOpacity>
 
-                />
                 {
                     this.state.showCalendar ?
                         (<DateTimePicker
@@ -47,8 +48,7 @@ export class OnCalendar extends Component {
             </View>
         );
 
-        return (<ToDoPageContent items={getDayItems(data, this.state.date)} subTitle={this.state.date ? dateString(this.state.date, 'MONTH DT, YEAR') : 'No Date selected!'
-        } auxAft={CalendarSection} />);
+        return (<ToDoPageContent items={getDayItems(data, this.state.date)} subTitle={null} auxBef={CalendarSection} />);
     }
 }
 
@@ -66,6 +66,21 @@ const styles = StyleSheet.create({
     },
     formItem: {
         flex: 1
+    },
+    button: {
+        alignItems: "center",
+        backgroundColor: "#DDDDDD",
+        padding: 10,
+        margin: 10,
+        borderRadius: 5,
+        flex: 1,
+        backgroundColor: '#5637DD'
+
+    },
+    buttonText: {
+        alignItems: "center",
+        color: '#fff'
     }
+
 });
 

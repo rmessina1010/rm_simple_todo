@@ -2,10 +2,11 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Today, Tomorrow, Overdue } from './ToDo'
+import NewToDo from './NewToDo'
 import { OnCalendar } from './CalendarSelect'
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 
 
 const TodayNavigator = createStackNavigator(
@@ -91,7 +92,26 @@ const CalendarNavigator = createStackNavigator(
     }
 );
 
-
+const AddToDoNavigator = createStackNavigator(
+    {
+        Add: { screen: NewToDo },
+    },
+    {
+        defaultNavigationOptions: ({ navigation }) => ({
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: style.headerTitle,
+            headerLeft: <Icon
+                name='plus-square'
+                type='font-awesome'
+                iconStyle={{ color: '#fff', marginLeft: 20 }}
+                onPress={() => navigation.toggleDrawer()}
+            />
+        })
+    }
+);
 const MainNavigator = createDrawerNavigator(
     {
         Today: {
@@ -139,6 +159,20 @@ const MainNavigator = createDrawerNavigator(
                 drawerIcon: ({ tintColor }) => (
                     <Icon
                         name='calendar'
+                        type='font-awesome'
+                        size={24}
+                        color={tintColor}
+                    />
+                )
+            }
+        },
+        AddToDo: {
+            screen: AddToDoNavigator,
+            navigationOptions: {
+                title: 'New To Do',
+                drawerIcon: ({ tintColor }) => (
+                    <Icon
+                        name='plus-square'
                         type='font-awesome'
                         size={24}
                         color={tintColor}
