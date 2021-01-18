@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-nativ
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export function displayTime(time) {
+    if (!time.getHours) { return time; }
     let hours = time.getHours();
     let minutes = time.getMinutes();
     let ampm = (hours > 11) ? ' PM' : ' AM';
@@ -64,7 +65,7 @@ class NewToDo extends Component {
                         padding={15}
                         marginTop={10}
                         marginHorizontal={10}
-                        style={styles.textInput}
+                        style={{ ...styles.textInput, fontWeight: 'normal' }}
                         blurOnSubmit={true}
                         textAlignVertical="top"
                         placeholder="Details"
@@ -127,6 +128,13 @@ class NewToDo extends Component {
                         >
                             <Text style={styles.buttonText}>Create</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            activeOpacity={.6}
+                            style={styles.button}
+                            onPress={() => this.setState(resetNewToDoState())}
+                        >
+                            <Text style={styles.buttonText}>Cancel</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 { this.state.showCalendar ?
@@ -146,7 +154,6 @@ class NewToDo extends Component {
                         mode='time'
                         display='spinner'
                         onChange={(event, selectedTime) => {
-                            console.log(selectedTime);
                             selectedTime && this.setState({ [this.clockTarget]: selectedTime, showClock: false });
                         }}
                         style={styles.formItem}

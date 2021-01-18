@@ -2,26 +2,37 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { styles, displayTime } from './NewToDo';
+import { extactDayData, dateString } from './ToDo';
+import data from '../shared/data';
+
 
 function resetNewToDoState() {
     return {
         title: '',
         details: '',
-        date: new Date(),
+        date: dateString(new Date(), 'DAY MO DT YR'),
         noTime: true,
-        startTime: new Date(),
-        endTime: new Date(),
+        startTime: displayTime(new Date()),
+        endTime: displayTime(new Date()),
         showCalendar: false,
         showClock: false,
     }
 }
 
+
 class EditToDo extends Component {
     constructor(props) {
         super(props);
+        let theToDo = extactDayData(data.TODOs, new Date(props.navigation.getParam('date')));
+        let itemKey = props.navigation.getParam('key');
 
+        if (theToDo.filter) {
+            theToDo = theToDo.filter(item => item.id === itemKey);
+            if (!theToDo) { theToDo = resetNewToDoState(); }
+            else { theToDo = theToDo[0]; }
+        }
         this.state = {
-            ...resetNewToDoState()
+            ...theToDo
         };
         this.clockTarget = 'endTime';
     }
@@ -56,7 +67,7 @@ class EditToDo extends Component {
                         padding={15}
                         marginTop={10}
                         marginHorizontal={10}
-                        style={styles.textInput}
+                        style={{ ...styles.textInput, fontWeight: 'normal' }}
                         blurOnSubmit={true}
                         textAlignVertical="top"
                         placeholder="Details"
@@ -71,13 +82,13 @@ class EditToDo extends Component {
                             style={styles.button}
                             onPress={() => this.setState({ showCalendar: true })}
                         >
-                            <Text style={styles.buttonText}>{this.state.date.toLocaleDateString('en-US')}</Text>
+                            <Text style={styles.buttonText}>{new Date(this.state.date).toLocaleDateString('en-US')}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             activeOpacity={.6}
                             style={styles.button}
-                            onPress={() => this.setState({ noTime: !this.state.noTime, startTime: new Date(), endTime: new Date() })}
+                            onPress={() => this.setState({ noTime: !this.state.noTime, startTime: '11:59 PM', endTime: '11:59 PM' })}
                         >
                             <Text style={styles.buttonText}>{this.state.noTime ? 'All Day' : 'Time Range'}</Text>
                         </TouchableOpacity>
@@ -94,7 +105,7 @@ class EditToDo extends Component {
                                 }
                                 }
                             >
-                                <Text style={styles.buttonText}>{displayTime(this.state.startTime)} </Text>
+                                <Text style={styles.buttonText}>{this.state.startTime} </Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
@@ -106,7 +117,7 @@ class EditToDo extends Component {
                                 }
                                 }
                             >
-                                <Text style={styles.buttonText}>{displayTime(this.state.endTime)}</Text>
+                                <Text style={styles.buttonText}>{this.state.endTime}</Text>
                             </TouchableOpacity>
                         </View>) : null
 
@@ -127,32 +138,43 @@ class EditToDo extends Component {
                             <Text style={styles.buttonText}>Delete</Text>
                         </TouchableOpacity>
                     </View>
+                    <View flexDirection='row'>
+                        <TouchableOpacity
+                            activeOpacity={.6}
+                            style={styles.button}
+                            onPress={() => this.props.navigation.pop()}
+                        >
+                            <Text style={styles.buttonText}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
-                { this.state.showCalendar ?
-                    (<DateTimePicker
-                        value={this.state.date}
-                        mode='date'
-                        display='default'
-                        onChange={(event, selectedDate) => {
-                            selectedDate && this.setState({ date: selectedDate, showCalendar: false });
-                        }}
-                        style={styles.formItem}
-                    />) : null
+                {
+                    this.state.showCalendar ?
+                        (<DateTimePicker
+                            value={new Date(this.state.date)}
+                            mode='date'
+                            display='default'
+                            onChange={(event, selectedDate) => {
+                                selectedDate && this.setState({ date: dateString(selectedDate, 'DAY MO DT YR'), showCalendar: false });
+                            }}
+                            style={styles.formItem}
+                        />) : null
                 }
-                { this.state.showClock ?
-                    (<DateTimePicker
-                        value={this.state.date}
-                        mode='time'
-                        display='spinner'
-                        onChange={(event, selectedTime) => {
-                            console.log(selectedTime);
-                            selectedTime && this.setState({ [this.clockTarget]: selectedTime, showClock: false });
-                        }}
-                        style={styles.formItem}
-                    />) : null
+                {
+                    this.state.showClock ?
+                        (<DateTimePicker
+                            value={new Date('Jan 1 1970 ' + this.state[this.clockTarget])}
+                            mode='time'
+                            display='spinner'
+                            onChange={(event, selectedTime) => {
+                                selectedTime && this.setState({ [this.clockTarget]: displayTime(selectedTime), showClock: false });
+
+                            }}
+                            style={styles.formItem}
+                        />) : null
                 }
-            </View>
+            </View >
         );
     }
 }

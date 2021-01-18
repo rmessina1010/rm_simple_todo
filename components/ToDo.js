@@ -24,7 +24,7 @@ export function dateString(date, pattern = '') {
 export function extactDayData(dataObj, theDate, raw = true) {
     let key = raw ? dateString(theDate, 'MO_DT_YEAR') : theDate;
     let data = dataObj[key] ? [].concat(dataObj[key].list) : [];
-    data.sort((a, b) => new Date(a.timeStart) < new Date(b.timeStart));
+    data.sort((a, b) => new Date(a.startTime) < new Date(b.startTime));
     return data;
 }
 
@@ -72,7 +72,7 @@ class ToDoItem extends Component {
                         />
                         <TouchableOpacity
                             activeOpacity={.6}
-                            onPress={() => navigate('EditToDo', { date: this.state.date })}
+                            onPress={() => navigate('EditToDo', { date: this.state.date, key: this.state.id })}
                         >
                             <Icon name="pencil" type="font-awesome" color="#aaa" />
                         </TouchableOpacity>
@@ -151,7 +151,7 @@ const style = StyleSheet.create({
         backgroundColor: '#fefefe',
         borderRadius: 5,
         padding: 10,
-        flex: 8,
+        flex: 10,
         elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -163,7 +163,7 @@ const style = StyleSheet.create({
     ToDoTimeBox: {
         paddingTop: 15,
         paddingRight: 10,
-        flex: 2,
+        flex: 3,
     },
     ToDoTitleBox: {
         paddingBottom: 0
