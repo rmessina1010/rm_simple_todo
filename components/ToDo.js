@@ -21,15 +21,23 @@ export function dateString(date, pattern = '') {
     pattern = pattern.replace('DT', date.getDate());
     return pattern;
 }
-
-export function getDayItems(items, rawDate) {
-    let filterStr = dateString(rawDate, 'MO DT YEAR');
-
-    return filterStr ? items.filter(item => (!item.date || item.date.indexOf(filterStr) > -1)) : [];
+export function extactDayData(dataObj, theDate, raw = true) {
+    let key = raw ? dateString(theDate, 'MO_DT_YEAR') : theDate;
+    let data = dataObj[key] ? [].concat(dataObj[key].list) : [];
+    data.sort((a, b) => new Date(a.timeStart) < new Date(b.timeStart));
+    return data;
 }
 
+export function getDayItems(items, rawDate) { return extactDayData(items, rawDate); }
+
 function getOverdue(items, rawDate) {
-    return items.filter(item => (!item.date || new Date(item.date) <= rawDate));
+    let overdue = [];
+    for (const dateKey in items) {
+        if (!items[dateKey].complete) {
+            overdue.push(...items[dateKey].list.filter(item => new Date(item.date) <= rawDate && !item.status));
+        }
+    }
+    return overdue;
 }
 
 class ToDoItem extends Component {
@@ -101,7 +109,7 @@ export class Today extends Component {
     static navigationOptions = { title: "Today" }
     render(props) {
         let today = new Date();
-        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data, today)} subTitle={dateString(today, 'MONTH DT, YEAR')} />);
+        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data.TODOs, today)} subTitle={dateString(today, 'MONTH DT, YEAR')} />);
     }
 }
 
@@ -113,7 +121,7 @@ export class Tomorrow extends Component {
     render(props) {
         let tommorow = new Date();
         tommorow.setDate(tommorow.getDate() + 1);
-        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data, tommorow)} subTitle={dateString(tommorow, 'MONTH DT, YEAR')} />);
+        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data.TODOs, tommorow)} subTitle={dateString(tommorow, 'MONTH DT, YEAR')} />);
     }
 }
 export class Overdue extends Component {
@@ -123,7 +131,7 @@ export class Overdue extends Component {
     static navigationOptions = { title: "Overdue" }
     render(props) {
         let now = new Date();
-        return (<ToDoPageContent navigation={this.props.navigation} items={getOverdue(data, now)} subTitle={dateString(now, 'Late as of: MONTH DT, YEAR')} />);
+        return (<ToDoPageContent navigation={this.props.navigation} items={getOverdue(data.TODOs, now)} subTitle={dateString(now, 'Late as of: MONTH DT, YEAR')} />);
     }
 }
 

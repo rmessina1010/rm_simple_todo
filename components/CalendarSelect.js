@@ -48,7 +48,7 @@ export class OnCalendar extends Component {
             </View>
         );
 
-        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data, this.state.date)} subTitle={null} auxBef={CalendarSection} />);
+        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data.TODOs, this.state.date)} subTitle={null} auxBef={CalendarSection} />);
     }
 }
 
