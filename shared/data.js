@@ -1,5 +1,5 @@
 const data = {
-	nextId: 33,
+	nextId: 34,
 	TODOs: {
 		Jan_8_2021: {
 			complete: false,
@@ -323,20 +323,11 @@ const data = {
 			complete: false,
 			list: [
 				{
-					id: 30,
-					noTime: false,
-					startTime: "8:30 am",
-					endTime: "1:30 pm",
-					details: "lorem",
-					title: "lorem",
-					status: true,
-					date: "Thursday Jan 22 2021"
-				}, {
 					id: 31,
 					noTime: false,
 					startTime: "8:30 am",
 					endTime: "1:30 pm",
-					details: "lorem",
+					details: "lorem 31",
 					title: "lorem",
 					status: true,
 					date: "Thursday Jan 22 2021"
@@ -345,8 +336,17 @@ const data = {
 					noTime: false,
 					startTime: "8:30 am",
 					endTime: "1:30 pm",
-					details: "lorem",
+					details: "lorem 32",
 					title: "lorem",
+					status: true,
+					date: "Thursday Jan 22 2021"
+				}, {
+					id: 33,
+					noTime: false,
+					startTime: "8:30 am",
+					endTime: "1:30 pm",
+					details: "lorem",
+					title: "lorem 33",
 					status: false,
 					date: "Thursday Jan 22 2021"
 				}

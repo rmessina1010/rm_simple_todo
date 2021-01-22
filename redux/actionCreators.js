@@ -14,3 +14,8 @@ export const deleteToDo = (date, id) => ({
     type: ActionTypes.DELETE_TODO,
     payload: { date, id },
 });
+
+export const editToDo = (todo, originalDate) => ({
+    type: ActionTypes.EDIT_TODO,
+    payload: { todo, originalDate },
+});

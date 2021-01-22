@@ -12,7 +12,6 @@ import data from '../shared/data';
 // }
 
 const ConfigureStore = () => {
-    console.log(data);
     const store = createStore(toDoReducer, data);
     //const persistor = persistStore(store)
     //return { persistor, store };

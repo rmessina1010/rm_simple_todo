@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { updateStatus, addToDo, deleteToDo } from '../redux/actionCreators'
+import { updateStatus, addToDo, deleteToDo, editToDo } from '../redux/actionCreators'
 
 import { View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -242,6 +242,7 @@ const mapDispatchToProps = {
     updateStatus: (date, id, status) => updateStatus(date, id, status), //maps to an action creator
     addToDo: (todo, nextId) => addToDo(todo, nextId), //maps to an action creator
     deleteToDo: (date, todoId) => deleteToDo(date, todoId), //maps to an action creator
+    editToDo: (todo, originalDate) => editToDo(todo, originalDate), //maps to an action creator
 };
 
 
@@ -259,7 +260,8 @@ function Main(props) {
                 nextId: props.nextId,
                 updateStatus: props.updateStatus,
                 addToDo: props.addToDo,
-                deleteToDo: props.deleteToDo
+                deleteToDo: props.deleteToDo,
+                editToDo: props.editToDo
             }} />
         </View>
     );

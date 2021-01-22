@@ -47,10 +47,23 @@ export const toDoReducer = (state, action) => {
                 updated[dateKey].list.push(newToDo);
                 updated[dateKey].list.sort((a, b) => new Date(a.startTime) > new Date(b.startTime));
             }
-            console.log(updated[dateKey], dateKey, action.payload.nextId + 1);
+            // console.log(updated[dateKey], dateKey, action.payload.nextId + 1);
             return { ...state, TODOs: updated, nextId: action.payload.nextId + 1 };
         case ActionTypes.EDIT_TODO:
-            return state;
+            updated = JSON.parse(JSON.stringify(state.TODOs));
+            let newDateKey = dateString(new Date(action.payload.todo.date), 'MO_DT_YEAR');
+            if (!updated[newDateKey]) { updated[newDateKey] = { list: [], complete: true } }
+            updated[newDateKey].list = updated[newDateKey].list.filter(todo => todo.id !== action.payload.todo.id);
+            updated[newDateKey].list.push(action.payload.todo);
+            updated[newDateKey].list.sort((a, b) => new Date(a.startTime) > new Date(b.startTime));
+            updated[newDateKey].complete = (updated[newDateKey].complete && action.payload.todo.status);
+            if (action.payload.todo.date !== action.payload.originalDate) {// if edit changes dates, delte item from original date.list
+                let oldDateKey = dateString(new Date(action.payload.originalDate), 'MO_DT_YEAR');
+                updated[oldDateKey].list = updated[oldDateKey].list.filter(todo => todo.id !== action.payload.todo.id);
+                updated[oldDateKey].complete = !(updated[dateKey].list.some(todo => !todo.status))
+            }
+            //  console.log(updated);
+            return { ...state, TODOs: updated };
         case ActionTypes.DELETE_TODO:
             dateKey = dateString(new Date(action.payload.date), 'MO_DT_YEAR');
             updated = JSON.parse(JSON.stringify(state.TODOs));

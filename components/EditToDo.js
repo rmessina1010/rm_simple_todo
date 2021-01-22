@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { styles, displayTime } from './NewToDo';
 import { extactDayData, dateString } from '../shared/sharedFunctions'
-import data from '../shared/data';
 
 
 function resetNewToDoState() {
@@ -23,7 +22,7 @@ function resetNewToDoState() {
 class EditToDo extends Component {
     constructor(props) {
         super(props);
-        let theToDo = extactDayData(data.TODOs, new Date(props.navigation.getParam('date')));
+        let theToDo = extactDayData(this.props.screenProps.TODOs, new Date(props.navigation.getParam('date')));
         let itemKey = props.navigation.getParam('key');
 
         if (theToDo.filter) {
@@ -37,11 +36,33 @@ class EditToDo extends Component {
         this.clockTarget = 'endTime';
     }
 
-    handeSubmit = (isDelete) => {
+    handleSubmit = (isDelete) => {
         if (isDelete) {
-            this.props.screenProps.deleteToDo(this.props.navigation.getParam('date'), this.props.navigation.getParam('key'));
+            Alert.alert(
+                `Delete: ${this.state.title}`,
+                `This action cannot be undone.`,
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                        onPress: () => console.log('Cancel Pressed')
+                    },
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            this.props.screenProps.deleteToDo(this.props.navigation.getParam('date'), this.props.navigation.getParam('key'));
+                            this.props.navigation.pop();
+                        }
+                    }
+                ],
+                { cancelable: false }
+            );
+        } else {
+            let originalDateKey = this.props.navigation.getParam('date');
+            this.props.screenProps.editToDo(this.state, originalDateKey);
             this.props.navigation.pop();
         }
+
     }
     static navigationOptions = { title: "Edit To Do" }
 
@@ -129,14 +150,14 @@ class EditToDo extends Component {
                         <TouchableOpacity
                             activeOpacity={.6}
                             style={{ ...styles.button, backgroundColor: '#5637DD' }}
-                            onPress={() => this.handeSubmit(false)}
+                            onPress={() => this.handleSubmit(false)}
                         >
                             <Text style={styles.buttonText}>Update</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             activeOpacity={.6}
                             style={styles.button}
-                            onPress={() => this.handeSubmit(true)}
+                            onPress={() => this.handleSubmit(true)}
                         >
                             <Text style={styles.buttonText}>Delete</Text>
                         </TouchableOpacity>
