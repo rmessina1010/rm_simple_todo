@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { ToDoPageContent, getDayItems, dateString } from './ToDo';
+import { ToDoPageContent, getDayItems } from './ToDo';
+
 import data from '../shared/data';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -22,7 +23,7 @@ export class OnCalendar extends Component {
     }
     static navigationOptions = { title: "Calendar" }
 
-    render(props) {
+    render() {
 
         const CalendarSection = (
             <View style={{ alignItems: "center", paddingVertical: 0 }}>
@@ -48,7 +49,12 @@ export class OnCalendar extends Component {
             </View>
         );
 
-        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data.TODOs, this.state.date)} subTitle={null} auxBef={CalendarSection} />);
+        return (<ToDoPageContent
+            navigation={this.props.navigation}
+            items={getDayItems(this.props.screenProps.TODOs, this.state.date)}
+            subTitle={null} auxBef={CalendarSection}
+            updateStatus={this.props.screenProps.updateStatus}
+        />);
     }
 }
 

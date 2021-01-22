@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { styles, displayTime } from './NewToDo';
-import { extactDayData, dateString } from './ToDo';
+import { extactDayData, dateString } from '../shared/sharedFunctions'
 import data from '../shared/data';
 
 

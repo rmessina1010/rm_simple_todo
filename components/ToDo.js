@@ -3,30 +3,9 @@ import { ScrollView } from 'react-native';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
 import data from '../shared/data';
-import { displayTime } from './NewToDo';
+import { extactDayData, dateString } from '../shared/sharedFunctions'
 
 ///Helper Foos///
-export function dateString(date, pattern = '') {
-    if (!date || !date.getFullYear) { return ''; }
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const monthAbv = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-    const dayAbv = ['Sun', 'Mon', 'Tue', 'Wed', 'Thrs', 'Fri', 'Sat'];
-    pattern = pattern.replace('YR', date.getFullYear().toString().substr(-2));
-    pattern = pattern.replace('YEAR', date.getFullYear().toString());
-    pattern = pattern.replace('MONTH', monthNames[date.getMonth()]);
-    pattern = pattern.replace('MO', monthAbv[date.getMonth()]);
-    pattern = pattern.replace('DAY', dayNames[date.getDay()]);
-    pattern = pattern.replace('DY', dayAbv[date.getDay()]);
-    pattern = pattern.replace('DT', date.getDate());
-    return pattern;
-}
-export function extactDayData(dataObj, theDate, raw = true) {
-    let key = raw ? dateString(theDate, 'MO_DT_YEAR') : theDate;
-    let data = dataObj[key] ? [].concat(dataObj[key].list) : [];
-    data.sort((a, b) => new Date(a.startTime) < new Date(b.startTime));
-    return data;
-}
 
 export function getDayItems(items, rawDate) { return extactDayData(items, rawDate); }
 
@@ -41,38 +20,30 @@ function getOverdue(items, rawDate) {
 }
 
 class ToDoItem extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props }
-    }
     render() {
         const { navigate } = this.props.navigation;
 
         return (
             <View style={this.props.zebra} >
                 <View style={style.ToDoTimeBox} >
-                    <Text style={style.ToDoTime}>{this.state.startTime}</Text>
-                    <Text style={style.ToDoTime}>{this.state.endTime}</Text>
+                    <Text style={style.ToDoTime}>{this.props.startTime}</Text>
+                    <Text style={style.ToDoTime}>{this.props.endTime}</Text>
                 </View>
 
                 <View style={style.ToDoContent} >
                     <View flex={11} >
-                        <Text style={{ fontWeight: 'bold' }}>{this.state.title}</Text>
-                        <Text style={style.ToDoDesc}>{this.state.details}</Text>
+                        <Text style={{ fontWeight: 'bold' }}>{this.props.title}</Text>
+                        <Text style={style.ToDoDesc}>{this.props.details}</Text>
                     </View>
                     <View flex={1} marginTop={-15} marginBottom={15}>
                         <CheckBox
                             right
-                            checked={this.state.status}
-                            onPress={
-                                () => {
-                                    this.setState({ status: !this.state.status });
-                                }
-                            }
+                            checked={this.props.status}
+                            onPress={() => this.props.updateStatus(this.props.date, this.props.id, !this.props.status)}
                         />
                         <TouchableOpacity
                             activeOpacity={.6}
-                            onPress={() => navigate('EditToDo', { date: this.state.date, key: this.state.id })}
+                            onPress={() => navigate('EditToDo', { date: this.props.date, key: this.props.id })}
                         >
                             <Icon name="pencil" type="font-awesome" color="#aaa" />
                         </TouchableOpacity>
@@ -86,7 +57,12 @@ class ToDoItem extends Component {
 }
 
 export function ToDoItemList(props) {
-    const items = props.items.map((item, index) => { return (<ToDoItem navigation={props.navigation} {...item} key={item.id} zebra={(index % 2 === 0 ? style.ToDoItem : style.ToDoItemDark)} />) });
+    const items = props.items.map((item, index) => {
+        return (<ToDoItem
+            navigation={props.navigation} {...item}
+            updateStatus={props.updateStatus}
+            key={item.id} zebra={(index % 2 === 0 ? style.ToDoItem : style.ToDoItemDark)} />)
+    });
     return (<View>{items}</View>);
 }
 
@@ -97,7 +73,11 @@ export function ToDoPageContent(props) {
                 {props.subTitle ? (<Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>{props.subTitle}</Text>) : null}
                 {props.auxBef}
             </View>
-            <ToDoItemList navigation={props.navigation} items={props.items} />
+            <ToDoItemList
+                updateStatus={props.updateStatus}
+                navigation={props.navigation}
+                items={props.items}
+            />
         </ScrollView>
     );
 }
@@ -107,9 +87,14 @@ export class Today extends Component {
         super(props);
     }
     static navigationOptions = { title: "Today" }
-    render(props) {
+    render() {
         let today = new Date();
-        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data.TODOs, today)} subTitle={dateString(today, 'MONTH DT, YEAR')} />);
+        return (<ToDoPageContent
+            navigation={this.props.navigation}
+            items={getDayItems(this.props.screenProps.TODOs, today)}
+            subTitle={dateString(today, 'MONTH DT, YEAR')}
+            updateStatus={this.props.screenProps.updateStatus}
+        />);
     }
 }
 
@@ -118,20 +103,32 @@ export class Tomorrow extends Component {
         super(props);
     }
     static navigationOptions = { title: "Tomorrow" }
-    render(props) {
+    render() {
         let tommorow = new Date();
         tommorow.setDate(tommorow.getDate() + 1);
-        return (<ToDoPageContent navigation={this.props.navigation} items={getDayItems(data.TODOs, tommorow)} subTitle={dateString(tommorow, 'MONTH DT, YEAR')} />);
+        return (<ToDoPageContent
+            navigation={this.props.navigation}
+            items={getDayItems(this.props.screenProps.TODOs, tommorow)}
+            subTitle={dateString(tommorow, 'MONTH DT, YEAR')}
+            updateStatus={this.props.screenProps.updateStatus}
+        />);
     }
 }
+
 export class Overdue extends Component {
     constructor(props) {
         super(props);
     }
     static navigationOptions = { title: "Overdue" }
-    render(props) {
+    render() {
         let now = new Date();
-        return (<ToDoPageContent navigation={this.props.navigation} items={getOverdue(data.TODOs, now)} subTitle={dateString(now, 'Late as of: MONTH DT, YEAR')} />);
+        // console.log(this.props.screenProps);
+        return (<ToDoPageContent
+            updateStatus={this.props.screenProps.updateStatus}
+            navigation={this.props.navigation}
+            items={getOverdue(this.props.screenProps.TODOs, now)}
+            subTitle={dateString(now, 'Late as of: MONTH DT, YEAR')}
+        />);
     }
 }
 

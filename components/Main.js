@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { updateStatus } from '../redux/actionCreators'
+
 import { View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Today, Tomorrow, Overdue } from './ToDo'
@@ -231,15 +234,29 @@ const MainNavigator = createDrawerNavigator(
     }
 );
 
+
+const mapStateToProps = state => {
+    return { ...state }
+}
+const mapDispatchToProps = {
+    updateStatus: (date, id, status) => updateStatus(date, id, status), //maps to an action creator
+};
+
+
 const AppNavigator = createAppContainer(MainNavigator);
 
 function Main(props) {
+    console.log(props.updateStatus, "MAIN")
     return (
         <View style={{
             flex: 1,
             paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight
         }} >
-            <AppNavigator />
+            <AppNavigator screenProps={{
+                TODOs: props.TODOs,
+                nextId: props.nextId,
+                updateStatus: props.updateStatus
+            }} />
         </View>
     );
 }
@@ -258,4 +275,4 @@ const style = StyleSheet.create({
     }
 });
 
-export default Main;
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
