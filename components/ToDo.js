@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { ScrollView } from 'react-native';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
-import data from '../shared/data';
 import { extactDayData, dateString } from '../shared/sharedFunctions'
 
 ///Helper Foos///

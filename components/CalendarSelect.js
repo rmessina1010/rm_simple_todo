@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { ToDoPageContent, getDayItems } from './ToDo';
 
-import data from '../shared/data';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 

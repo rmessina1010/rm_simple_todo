@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-export function displayTime(time) {
-    if (!time.getHours) { return time; }
-    let hours = time.getHours();
-    let minutes = time.getMinutes();
-    let ampm = (hours > 11) ? ' PM' : ' AM';
-    if (hours == 0) { hours = 12; }
-    if (hours > 12) { hours -= 12; }
-    return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ampm;
-}
+import { displayTime } from '../shared/sharedFunctions'
 
 function resetNewToDoState() {
     return {
@@ -27,17 +18,16 @@ function resetNewToDoState() {
 class NewToDo extends Component {
     constructor(props) {
         super(props);
-
         this.state = resetNewToDoState();
         this.clockTarget = 'endTime';
 
     }
 
-    handeSubmit() {
+    handleSubmit() {
+        this.props.screenProps.addToDo(this.state, this.props.screenProps.nextId);
         this.setState(resetNewToDoState());
-        alert(1);
-
     }
+
     static navigationOptions = { title: "Create To Do" }
 
     render() {
@@ -56,7 +46,7 @@ class NewToDo extends Component {
                         textAlignVertical="top"
                         placeholder="Title"
 
-                        onChange={value => this.setState({ title: value })}
+                        onChangeText={value => this.setState({ title: value })}
 
                     />
                     <TextInput
@@ -72,7 +62,7 @@ class NewToDo extends Component {
                         numberOfLines={4}
                         multiline={true}
 
-                        onChange={value => this.setState({ details: value })}
+                        onChangeText={value => this.setState({ details: value })}
                     />
                     <View flexDirection='row'>
                         <TouchableOpacity
@@ -124,14 +114,14 @@ class NewToDo extends Component {
                         <TouchableOpacity
                             activeOpacity={.6}
                             style={{ ...styles.button, backgroundColor: '#5637DD' }}
-                            onPress={() => this.handeSubmit(false)}
+                            onPress={() => this.handleSubmit()}
                         >
                             <Text style={styles.buttonText}>Create</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             activeOpacity={.6}
                             style={styles.button}
-                            onPress={() => this.setState(resetNewToDoState())}
+                            onPress={() => { this.setState(resetNewToDoState()) }}
                         >
                             <Text style={styles.buttonText}>Cancel</Text>
                         </TouchableOpacity>

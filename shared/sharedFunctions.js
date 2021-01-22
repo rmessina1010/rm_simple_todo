@@ -19,3 +19,13 @@ export function extactDayData(dataObj, theDate, raw = true) {
     data.sort((a, b) => new Date(a.startTime) < new Date(b.startTime));
     return data;
 }
+
+export function displayTime(time) {
+    if (!time.getHours) { return time; }
+    let hours = time.getHours();
+    let minutes = time.getMinutes();
+    let ampm = (hours > 11) ? ' PM' : ' AM';
+    if (hours == 0) { hours = 12; }
+    if (hours > 12) { hours -= 12; }
+    return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ampm;
+}
