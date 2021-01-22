@@ -37,8 +37,11 @@ class EditToDo extends Component {
         this.clockTarget = 'endTime';
     }
 
-    handeSubmit() {
-        alert(1);
+    handeSubmit = (isDelete) => {
+        if (isDelete) {
+            this.props.screenProps.deleteToDo(this.props.navigation.getParam('date'), this.props.navigation.getParam('key'));
+            this.props.navigation.pop();
+        }
     }
     static navigationOptions = { title: "Edit To Do" }
 
@@ -58,7 +61,7 @@ class EditToDo extends Component {
                         textAlignVertical="top"
                         placeholder="Title"
 
-                        onChange={value => this.setState({ title: value })}
+                        onChangeText={value => this.setState({ title: value })}
 
                     />
                     <TextInput
@@ -74,7 +77,7 @@ class EditToDo extends Component {
                         numberOfLines={4}
                         multiline={true}
 
-                        onChange={value => this.setState({ details: value })}
+                        onChangeText={value => this.setState({ details: value })}
                     />
                     <View flexDirection='row'>
                         <TouchableOpacity

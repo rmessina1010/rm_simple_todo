@@ -52,8 +52,11 @@ export const toDoReducer = (state, action) => {
         case ActionTypes.EDIT_TODO:
             return state;
         case ActionTypes.DELETE_TODO:
-            return state;
-
+            dateKey = dateString(new Date(action.payload.date), 'MO_DT_YEAR');
+            updated = JSON.parse(JSON.stringify(state.TODOs));
+            updated[dateKey].list = updated[dateKey].list.filter(todo => todo.id !== action.payload.id);
+            updated[dateKey].complete = !(updated[dateKey].list.some(todo => !todo.status))
+            return { ...state, TODOs: updated };
         default:
             return state;
 

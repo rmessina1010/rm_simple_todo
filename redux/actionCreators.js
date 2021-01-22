@@ -9,3 +9,8 @@ export const addToDo = (todo, nextId) => ({
     type: ActionTypes.ADD_TODO,
     payload: { todo, nextId },
 });
+
+export const deleteToDo = (date, id) => ({
+    type: ActionTypes.DELETE_TODO,
+    payload: { date, id },
+});
