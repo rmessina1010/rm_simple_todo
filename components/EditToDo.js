@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { styles, displayTime } from './NewToDo';
-import { extactDayData, dateString } from '../shared/sharedFunctions'
-
+import { styles } from './NewToDo';
+import { extactDayData, dateString, displayTime } from '../shared/sharedFunctions'
 
 function resetNewToDoState() {
     return {
@@ -104,7 +103,7 @@ class EditToDo extends Component {
                         <TouchableOpacity
                             activeOpacity={.6}
                             style={styles.button}
-                            onPress={() => this.setState({ showCalendar: true })}
+                            onPress={() => this.setState({ showCalendar: true, showClock: false })}
                         >
                             <Text style={styles.buttonText}>{new Date(this.state.date).toLocaleDateString('en-US')}</Text>
                         </TouchableOpacity>
@@ -125,7 +124,7 @@ class EditToDo extends Component {
                                 style={styles.button}
                                 onPress={() => {
                                     this.clockTarget = 'startTime';
-                                    this.setState({ showClock: true })
+                                    this.setState({ showClock: true, showCalendar: false })
                                 }
                                 }
                             >
@@ -137,7 +136,7 @@ class EditToDo extends Component {
                                 style={styles.button}
                                 onPress={() => {
                                     this.clockTarget = 'endTime';
-                                    this.setState({ showClock: true })
+                                    this.setState({ showClock: true, showCalendar: false })
                                 }
                                 }
                             >
@@ -149,7 +148,7 @@ class EditToDo extends Component {
                     <View flexDirection='row'>
                         <TouchableOpacity
                             activeOpacity={.6}
-                            style={{ ...styles.button, backgroundColor: '#5637DD' }}
+                            style={{ ...styles.button, backgroundColor: '#45B101' }}
                             onPress={() => this.handleSubmit(false)}
                         >
                             <Text style={styles.buttonText}>Update</Text>

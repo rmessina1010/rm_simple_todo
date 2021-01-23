@@ -32,7 +32,7 @@ const TodayNavigator = createStackNavigator(
     {
         defaultNavigationOptions: ({ navigation }) => ({
             headerStyle: {
-                backgroundColor: '#5637DD',
+                backgroundColor: '#45B101',
             },
             headerTintColor: '#fff',
             headerTitleStyle: style.headerTitle,
@@ -65,7 +65,7 @@ const TomorrowNavigator = createStackNavigator(
     {
         defaultNavigationOptions: ({ navigation }) => ({
             headerStyle: {
-                backgroundColor: '#5637DD'
+                backgroundColor: '#45B101'
             },
             headerTintColor: '#fff',
             headerTitleStyle: style.headerTitle,
@@ -97,7 +97,7 @@ const OverdueNavigator = createStackNavigator(
     {
         defaultNavigationOptions: ({ navigation }) => ({
             headerStyle: {
-                backgroundColor: '#5637DD'
+                backgroundColor: '#45B101'
             },
             headerTintColor: '#fff',
             headerTitleStyle: style.headerTitle,
@@ -129,7 +129,7 @@ const CalendarNavigator = createStackNavigator(
     {
         defaultNavigationOptions: ({ navigation }) => ({
             headerStyle: {
-                backgroundColor: '#5637DD'
+                backgroundColor: '#45B101'
             },
             headerTintColor: '#fff',
             headerTitleStyle: style.headerTitle,
@@ -150,7 +150,7 @@ const AddToDoNavigator = createStackNavigator(
     {
         defaultNavigationOptions: ({ navigation }) => ({
             headerStyle: {
-                backgroundColor: '#5637DD'
+                backgroundColor: '#45B101'
             },
             headerTintColor: '#fff',
             headerTitleStyle: style.headerTitle,

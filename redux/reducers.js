@@ -1,5 +1,5 @@
 import * as ActionTypes from './actionTypes';
-import { dateString, displayTime } from '../shared/sharedFunctions'
+import { dateString, displayTime, timeSorter } from '../shared/sharedFunctions'
 
 export const toDoReducer = (state, action) => {
     let dateKey;
@@ -45,7 +45,7 @@ export const toDoReducer = (state, action) => {
             } else {
                 updated[dateKey].complete = false;
                 updated[dateKey].list.push(newToDo);
-                updated[dateKey].list.sort((a, b) => new Date(a.startTime) > new Date(b.startTime));
+                updated[dateKey].list.sort((a, b) => timeSorter(a.startTime, b.startTime, true));
             }
             // console.log(updated[dateKey], dateKey, action.payload.nextId + 1);
             return { ...state, TODOs: updated, nextId: action.payload.nextId + 1 };
@@ -55,12 +55,12 @@ export const toDoReducer = (state, action) => {
             if (!updated[newDateKey]) { updated[newDateKey] = { list: [], complete: true } }
             updated[newDateKey].list = updated[newDateKey].list.filter(todo => todo.id !== action.payload.todo.id);
             updated[newDateKey].list.push(action.payload.todo);
-            updated[newDateKey].list.sort((a, b) => new Date(a.startTime) > new Date(b.startTime));
+            updated[newDateKey].list.sort((a, b) => timeSorter(a.startTime, b.startTime, true));
             updated[newDateKey].complete = (updated[newDateKey].complete && action.payload.todo.status);
             if (action.payload.todo.date !== action.payload.originalDate) {// if edit changes dates, delte item from original date.list
                 let oldDateKey = dateString(new Date(action.payload.originalDate), 'MO_DT_YEAR');
                 updated[oldDateKey].list = updated[oldDateKey].list.filter(todo => todo.id !== action.payload.todo.id);
-                updated[oldDateKey].complete = !(updated[dateKey].list.some(todo => !todo.status))
+                updated[oldDateKey].complete = !(updated[oldDateKey].list.some(todo => !todo.status))
             }
             //  console.log(updated);
             return { ...state, TODOs: updated };

@@ -113,7 +113,7 @@ class NewToDo extends Component {
                     <View flexDirection='row'>
                         <TouchableOpacity
                             activeOpacity={.6}
-                            style={{ ...styles.button, backgroundColor: '#5637DD' }}
+                            style={{ ...styles.button, backgroundColor: '#45B101' }}
                             onPress={() => this.handleSubmit()}
                         >
                             <Text style={styles.buttonText}>Create</Text>

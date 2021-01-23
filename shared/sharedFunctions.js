@@ -16,16 +16,26 @@ export function dateString(date, pattern = '') {
 export function extactDayData(dataObj, theDate, raw = true) {
     let key = raw ? dateString(theDate, 'MO_DT_YEAR') : theDate;
     let data = dataObj[key] ? [].concat(dataObj[key].list) : [];
-    data.sort((a, b) => new Date(a.startTime) < new Date(b.startTime));
+    data.sort((a, b) => timeSorter(a.date + ' ' + a.startTime, b.date + ' ' + b.startTime, true, ''));
     return data;
 }
 
 export function displayTime(time) {
     if (!time.getHours) { return time; }
     let hours = time.getHours();
+
     let minutes = time.getMinutes();
-    let ampm = (hours > 11) ? ' PM' : ' AM';
+    let ampm = (hours > 11) ? ' pm' : ' am';
     if (hours == 0) { hours = 12; }
     if (hours > 12) { hours -= 12; }
-    return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ampm;
+    return String(hours) + ':' + String(minutes).padStart(2, '0') + ampm;
+}
+
+export function timeSorter(a, b, process = false, pre = 'Jan 1 1970 ') {
+    if (process) {
+        a = pre + a.replace(/ (pm|am)/i, ':00 $1');
+        b = pre + b.replace(/ (pm|am)/i, ':00 $1');
+    }
+
+    return (new Date(a) > new Date(b));
 }
