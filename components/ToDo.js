@@ -24,7 +24,8 @@ class ToDoItem extends Component {
 
         return (
             <View style={this.props.zebra} >
-                <View style={style.ToDoTimeBox} >
+                <View style={style.ToDoTimeBox}>
+                    {this.props.overdue ? <Text style={style.ToDoDate}>{dateString(new Date(this.props.date), 'MO DT\nYEAR')}</Text> : null}
                     <Text style={style.ToDoTime}>{this.props.startTime}</Text>
                     <Text style={style.ToDoTime}>{this.props.endTime}</Text>
                 </View>
@@ -60,6 +61,7 @@ export function ToDoItemList(props) {
         return (<ToDoItem
             navigation={props.navigation} {...item}
             updateStatus={props.updateStatus}
+            overdue={props.overdue}
             key={item.id} zebra={(index % 2 === 0 ? style.ToDoItem : style.ToDoItemDark)} />)
     });
     return (<View>{items}</View>);
@@ -76,6 +78,7 @@ export function ToDoPageContent(props) {
                 updateStatus={props.updateStatus}
                 navigation={props.navigation}
                 items={props.items}
+                overdue={props.overdue}
             />
         </ScrollView>
     );
@@ -127,6 +130,7 @@ export class Overdue extends Component {
             navigation={this.props.navigation}
             items={getOverdue(this.props.screenProps.TODOs, now)}
             subTitle={dateString(now, 'Late as of: MONTH DT, YEAR')}
+            overdue={true}
         />);
     }
 }
@@ -171,6 +175,12 @@ const style = StyleSheet.create({
         fontSize: 11,
         textAlign: 'right',
         color: '#555'
+    },
+    ToDoDate: {
+        fontWeight: 'normal',
+        fontSize: 13,
+        textAlign: 'right',
+        color: '#aaa'
     },
 
 });
