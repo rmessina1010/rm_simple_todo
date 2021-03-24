@@ -12,7 +12,7 @@ function getOverdue(items, rawDate) {
     let overdue = [];
     for (const dateKey in items) {
         if (!items[dateKey].complete) {
-            overdue.push(...items[dateKey].list.filter(item => new Date(item.date) <= rawDate && !item.status));
+            overdue.push(...items[dateKey].list.filter(item => new Date(item.date + ' ' + item.startTime) <= rawDate && !item.status));
         }
     }
     return overdue;
@@ -26,8 +26,13 @@ class ToDoItem extends Component {
             <View style={this.props.zebra} >
                 <View style={style.ToDoTimeBox}>
                     {this.props.overdue ? <Text style={style.ToDoDate}>{dateString(new Date(this.props.date), 'MO DT\nYEAR')}</Text> : null}
-                    <Text style={style.ToDoTime}>{this.props.startTime}</Text>
-                    <Text style={style.ToDoTime}>{this.props.endTime}</Text>
+                    {(this.props.noTime && this.props.startTime === this.props.endTime) ?
+                        <Text style={style.ToDoTime}>ALL DAY</Text> :
+                        <View>
+                            <Text style={style.ToDoTime}>{this.props.startTime}</Text>
+                            <Text style={style.ToDoTime}>{this.props.endTime}</Text>
+                        </View>
+                    }
                 </View>
 
                 <View style={style.ToDoContent} >
@@ -120,7 +125,16 @@ export class Tomorrow extends Component {
 export class Overdue extends Component {
     constructor(props) {
         super(props);
+        this.state = {}
     }
+
+    componentDidMount() {
+        const { navigation } = this.props;
+        navigation.addListener('willFocus', () =>
+            this.setState(this.state)
+        );
+    }
+
     static navigationOptions = { title: "Overdue" }
     render() {
         let now = new Date();
